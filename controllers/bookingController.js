@@ -72,8 +72,8 @@ const createBookingCheckout = async (session) => {
   // }
 
   // const price = session.line_items[0].amount / 100;
-  // const price = session.amount_total / 100;
-  price = 40000;
+  const price = session.amount_total / 100;
+  if(!price) console.log("OOOOOPS");
 
   // // Retrieve the tour from your database using the tourId
   // tour = await Tour.findById(tourId);
