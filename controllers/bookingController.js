@@ -79,7 +79,7 @@ const createBookingCheckout = async (session) => {
   // const price = session.amount_total / 100;
 
   // Retrieve the tour from your database using the tourId
-  const tour = await Tour.findById(tourId);
+  tour = await Tour.findById(tourId);
 
   // Use the price of the tour that you stored in your database
   const price = tour.price;
