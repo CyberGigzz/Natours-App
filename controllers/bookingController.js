@@ -11,54 +11,31 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   const tour = await Tour.findById(req.params.tourId);
 
   // 2) Create checkout session
-  // const session = await stripe.checkout.sessions.create({
-  //   payment_method_types: ["card"],
-  //   mode: "payment", // Add this line
-  //   // success_url: `${req.protocol}://${req.get("host")}/?tour=${
-  //   //   req.params.tourId
-  //   // }&user=${req.user.id}&price=${tour.price}`,
-  //   success_url: `${req.protocol}://${req.get("host")}/my-tours`,
-  //   cancel_url: `${req.protocol}://${req.get("host")}/tour/${tour.slug}`,
-  //   customer_email: req.user.email,
-  //   client_reference_id: req.params.tourId,
-  //   line_items: [
-  //     {
-  //       price_data: {
-  //         unit_amount: tour.price * 100, // amount in smallest currency unit (e.g., cents)
-  //         currency: "usd",
-  //         product_data: {
-  //           name: `${tour.name} Tour`,
-  //           description: tour.summary,
-  //           images: [
-  //             `${req.protocol}://${req.get("host")}/img/tours/${
-  //               tour.imageCover
-  //             }`,
-  //           ],
-  //         },
-  //       },
-  //       quantity: 1,
-  //     },
-  //   ],
-  // });
-
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-    // success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
+    mode: "payment", // Add this line
+    // success_url: `${req.protocol}://${req.get("host")}/?tour=${
     //   req.params.tourId
     // }&user=${req.user.id}&price=${tour.price}`,
-    success_url: `${req.protocol}://${req.get("host")}/my-tours?alert=booking`,
+    success_url: `${req.protocol}://${req.get("host")}/my-tours`,
     cancel_url: `${req.protocol}://${req.get("host")}/tour/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourId,
     line_items: [
       {
-        name: `${tour.name} Tour`,
-        description: tour.summary,
-        images: [
-          `${req.protocol}://${req.get("host")}/img/tours/${tour.imageCover}`,
-        ],
-        amount: tour.price * 100,
-        currency: "usd",
+        price_data: {
+          unit_amount: tour.price * 100, // amount in smallest currency unit (e.g., cents)
+          currency: "usd",
+          product_data: {
+            name: `${tour.name} Tour`,
+            description: tour.summary,
+            images: [
+              `${req.protocol}://${req.get("host")}/img/tours/${
+                tour.imageCover
+              }`,
+            ],
+          },
+        },
         quantity: 1,
       },
     ],
