@@ -3,7 +3,7 @@ const express = require("express");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 const cors = require("cors");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 // const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 // const xssFilters = require('xss-filters');
@@ -19,7 +19,6 @@ const reviewRouter = require("./routes/reviewRoutes");
 const viewRouter = require("./routes/viewRoutes");
 const bookingRouter = require("./routes/bookingRoutes");
 const bookingController = require("./controllers/bookingController");
-
 
 // Started app
 const app = express();
@@ -41,7 +40,7 @@ app.use(cors());
 //   origin: 'https://www.natours.com'
 // }))
 
-app.options('*', cors());
+app.options("*", cors());
 // app.options('/api/v1/tours/:id', cors());
 
 // Serving static files
@@ -55,6 +54,12 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+// Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
+app.post(
+  "/webhook-checkout",
+  bodyParser.raw({ type: "application/json" }),
+  bookingController.webhookCheckout
+);
 
 // Limit requests from same API
 const limiter = rateLimit({
@@ -64,12 +69,6 @@ const limiter = rateLimit({
 });
 app.use("/api", limiter);
 
-// Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
-app.post(
-  '/webhook-checkout',
-  bodyParser.raw({ type: 'application/json' }),
-  bookingController.webhookCheckout
-);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: "10kb" }));
