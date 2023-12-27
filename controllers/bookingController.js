@@ -68,6 +68,11 @@ const createBookingCheckout = async (session) => {
     return;
   }
 
+  if (!session.line_items || !session.line_items[0]) {
+    console.error("No line items found in session");
+    return;
+  }
+
   const price = session.line_items[0].amount / 100;
   await Booking.create({ tour, user, price });
   // display_items
