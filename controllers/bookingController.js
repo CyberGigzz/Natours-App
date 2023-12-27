@@ -62,16 +62,12 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 const createBookingCheckout = async (session) => {
   console.log("Session:", JSON.stringify(session, null, 2));
 
+  let tourId = session.client_reference_id;
   const tour = session.client_reference_id;
   const user = (await User.findOne({ email: session.customer_email })).id;
 
-  if (!user) {
-    console.error(`No user found with email ${session.customer_email}`);
-    return;
-  }
-
-  if (!session.line_items || !session.line_items[0]) {
-    console.error("No line items found in session");
+  if (!price) {
+    console.error(`No price found`);
     return;
   }
 
