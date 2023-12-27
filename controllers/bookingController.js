@@ -66,19 +66,20 @@ const createBookingCheckout = async (session) => {
   const tour = session.client_reference_id;
   const user = (await User.findOne({ email: session.customer_email })).id;
 
-  if (!price) {
-    console.error(`No price found`);
-    return;
-  }
+  // if (!price) {
+  //   console.error(`No price found`);
+  //   return;
+  // }
 
   // const price = session.line_items[0].amount / 100;
   // const price = session.amount_total / 100;
+  price = 40000;
 
-  // Retrieve the tour from your database using the tourId
-  tour = await Tour.findById(tourId);
+  // // Retrieve the tour from your database using the tourId
+  // tour = await Tour.findById(tourId);
 
-  // Use the price of the tour that you stored in your database
-  const price = tour.price;
+  // // Use the price of the tour that you stored in your database
+  // const price = tour.price;
 
   await Booking.create({ tour, user, price });
   // display_items
