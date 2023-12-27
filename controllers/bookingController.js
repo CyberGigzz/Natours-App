@@ -75,7 +75,8 @@ const createBookingCheckout = async (session) => {
     return;
   }
 
-  const price = session.line_items[0].amount / 100;
+  // const price = session.line_items[0].amount / 100;
+  const price = session.amount_total / 100;
   await Booking.create({ tour, user, price });
   // display_items
 };
